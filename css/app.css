@@ -1,0 +1,15 @@
+#slide-panel {
+	position: absolute;
+	top: 0%;
+    width:90vw;
+    height:100vh;
+    padding:10px;
+    background:#eee;
+    margin-left:-90vw;
+}
+#opener {
+    float:right;
+    position: relative;
+    margin: 45vh -2.5em 0px 0px;
+    border-radius:0;
+}
