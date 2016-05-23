@@ -1,0 +1,42 @@
+#slide-panel {
+	position: absolute;
+	top: 0%;
+    width:90vw;
+    height:100vh;
+    padding:10px;
+    background:#eee;
+    margin-left:-90vw;
+}
+#opener {
+    float:right;
+    position: relative;
+    margin: 45vh -2.5em 0px 0px;
+    border-radius:0;
+}
+
+svg {
+/*  border:1px solid black;*/
+<<<<<<< HEAD
+    font-size: 0.8em ;
+=======
+  font-size: 7px;
+>>>>>>> 111d7a38d62a6a8ae3585901993d3602e409bd5a
+}
+
+path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.slideContainer {
+    width: 100%; 
+    height:100%;
+}
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
