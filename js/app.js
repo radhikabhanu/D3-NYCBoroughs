@@ -135,3 +135,159 @@ function plotBorough(x) {
 function setMode(x) {
     mode = x;
 };
+
+// Draw the line graph in slide panel
+d3.csv("NYSummary.csv", function(error1, data) {
+
+        var width = 600;
+        var height = 300;
+        var padding = 60;
+          
+        var svg = d3.select("#slide-panel")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            // .append("g")
+            //     .attr("transform", 
+            //           "translate(" + padding + "," + padding + ")");
+
+            // .attr("width", '100%')
+            // .attr("height", "100%")
+            // .attr('viewBox','0 0 '+ width +' '+ height)
+            // .attr('preserveAspectRatio','xMinYMin')
+            // // .append("g")
+            // .attr("transform", "translate(" + padding + "," + padding + ")");
+
+        console.log(data);
+        var parseDate = d3.time.format("%d-%b-%y").parse;
+
+        var x = d3.scale.linear().domain([1990, 2007]).range([padding, width - padding]);
+        var y0 = d3.scale.linear().domain([0, 650000]).range([height - padding, padding]);
+        var y1 = d3.scale.linear().domain([0, 750000]).range([height - padding, padding]);
+
+        // Add the X & Y Axis
+        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(5);
+        var yAxisLeft = d3.svg.axis().scale(y0).orient("left").ticks(5);
+        var yAxisRight = d3.svg.axis().scale(y1).orient("right").ticks(5); 
+
+        svg.append("g")            
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (height - padding) + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + (padding) + " ,0)")   
+            .style("fill", "steelblue")
+            .call(yAxisLeft);   
+
+        svg.append("g")             
+            .attr("class", "y axis")    
+            .attr("transform", "translate(" + (width - padding) + " ,0)")   
+            .style("fill", "red")       
+            .call(yAxisRight);
+
+        // draw line of housing rate
+        // NYC
+        var valueline_housing_NYC = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.NYC_housing); });
+        // Bronx
+        var valueline_housing_Bronx = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Bronx_housing); });
+        // Brooklyn
+        var valueline_housing_Brooklyn = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Brooklyn_housing); });
+        // Manhattan
+        var valueline_housing_Manhattan = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Manhattan_housing); });
+        // Queens
+        var valueline_housing_Queens = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Queens_housing); });
+        // Staten
+        var valueline_housing_Staten = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Staten_housing); });
+
+        // draw line of felony rate
+        // NYC
+        var valueline_felony_NYC = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.NYC_felony); });
+        // Bronx
+        var valueline_felony_Bronx = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Bronx_felony); });
+        // Brooklyn
+        var valueline_felony_Brooklyn = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Brooklyn_felony); });
+        // Manhattan
+        var valueline_felony_Manhattan = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Manhattan_felony); });
+        // Queens
+        var valueline_felony_Queens = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Queens_felony); });
+        // Staten
+        var valueline_felony_Staten = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Staten_felony); });
+
+        // add path for housing
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#e6f0ff")
+            .attr("d", valueline_housing_NYC(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#b3d1ff")
+            .attr("d", valueline_housing_Bronx(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#99c2ff")
+            .attr("d", valueline_housing_Brooklyn(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#66a3ff")
+            .attr("d", valueline_housing_Manhattan(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#3385ff")
+            .attr("d", valueline_housing_Queens(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#0066ff")
+            .attr("d", valueline_housing_Staten(data));
+
+        // add path for falony
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#ffc2b3")
+            .attr("d", valueline_felony_NYC(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#ffad99")
+            .attr("d", valueline_felony_Bronx(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#ff8566")
+            .attr("d", valueline_felony_Brooklyn(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#ff5c33")
+            .attr("d", valueline_felony_Manhattan(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#ff3300")
+            .attr("d", valueline_felony_Queens(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", "#cc2900")
+            .attr("d", valueline_felony_Staten(data));
+
+    
+});
