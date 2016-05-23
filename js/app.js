@@ -137,17 +137,13 @@ function setMode(x) {
 };
 
 // Draw the line graph in slide panel
-d3.csv("NYSummary.csv", function(error, data) {
+d3.csv("NYSummary2.csv", function(error, data) {
 
-        var padding = 40;
         var $slideContainer = $(".slideContainer"),
             width = $slideContainer.width();
             height = $slideContainer.height();
 
-            console.log("height = " + height);
-            console.log("height - padding = " + (height - padding));
-            console.log("width = " + width);
-            console.log("width - padding = " + (width - padding));
+        var padding = 0.12 * width;
           
         var svg = d3.select(".slideContainer")
             .append("svg")
@@ -159,11 +155,11 @@ d3.csv("NYSummary.csv", function(error, data) {
         var parseDate = d3.time.format("%d-%b-%y").parse;
 
         var x = d3.scale.linear().domain([1990, 2007]).range([padding, width - padding]);
-        var y0 = d3.scale.linear().domain([0, 650000]).range([height - padding, padding]);
-        var y1 = d3.scale.linear().domain([0, 750000]).range([height - padding, padding]);
+        var y0 = d3.scale.linear().domain([0, 650]).range([height - padding, padding]);
+        var y1 = d3.scale.linear().domain([0, 750]).range([height - padding, padding]);
 
         // Add the X & Y Axis
-        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(5);
+        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(7);
         var yAxisLeft = d3.svg.axis().scale(y0).orient("left").ticks(5);
         var yAxisRight = d3.svg.axis().scale(y1).orient("right").ticks(5); 
 
@@ -183,6 +179,20 @@ d3.csv("NYSummary.csv", function(error, data) {
             .attr("transform", "translate(" + (width - padding) + " ,0)")   
             .style("fill", "red")       
             .call(yAxisRight);
+
+        svg.append("text")
+            .attr("x", - (height)/ 2 - padding) 
+            .attr("y", padding / 4)
+            .style("fill", "steelblue")
+            .attr("transform", "rotate(-90)")
+            .text("Housing Rent (1,000 USD)");
+
+        svg.append("text")
+            .attr("x", - (height)/ 2 - padding)
+            .attr("y", (width - padding / 4))
+            .attr("transform", "rotate(-90)")
+            .style("fill", "red") 
+            .text("Felony (1,000 Cases)");
 
         // draw line of housing rate
         // NYC
@@ -238,6 +248,7 @@ d3.csv("NYSummary.csv", function(error, data) {
 
         // add path for housing
         svg.append("path")        // Add the valueline path.
+ //           .attr("class", guide)
             .style("stroke", "#e6f0ff")
             .attr("d", valueline_housing_NYC(data));
 
