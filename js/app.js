@@ -137,28 +137,25 @@ function setMode(x) {
 };
 
 // Draw the line graph in slide panel
-d3.csv("NYSummary.csv", function(error1, data) {
+d3.csv("NYSummary.csv", function(error, data) {
 
-        var width = 600;
-        var height = 300;
-        var padding = 60;
+        var padding = 40;
+        var $slideContainer = $(".slideContainer"),
+            width = $slideContainer.width();
+            height = $slideContainer.height();
+
+            console.log("height = " + height);
+            console.log("height - padding = " + (height - padding));
+            console.log("width = " + width);
+            console.log("width - padding = " + (width - padding));
           
-        var svg = d3.select("#slide-panel")
+        var svg = d3.select(".slideContainer")
             .append("svg")
             .attr("width", width)
             .attr("height", height)
-            // .append("g")
-            //     .attr("transform", 
-            //           "translate(" + padding + "," + padding + ")");
+            .attr('viewBox','0 0 '+ (width)+' '+ (height))
+            .attr('preserveAspectRatio','xMinYMin meet')
 
-            // .attr("width", '100%')
-            // .attr("height", "100%")
-            // .attr('viewBox','0 0 '+ width +' '+ height)
-            // .attr('preserveAspectRatio','xMinYMin')
-            // // .append("g")
-            // .attr("transform", "translate(" + padding + "," + padding + ")");
-
-        console.log(data);
         var parseDate = d3.time.format("%d-%b-%y").parse;
 
         var x = d3.scale.linear().domain([1990, 2007]).range([padding, width - padding]);

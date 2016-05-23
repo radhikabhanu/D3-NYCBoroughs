@@ -15,7 +15,8 @@
 }
 
 svg {
-  border:1px solid black;
+/*  border:1px solid black;*/
+  font-size: 7px;
 }
 
 path { 
@@ -24,7 +25,10 @@ path {
     fill: none;
 }
 
-
+.slideContainer {
+    width: 100%; 
+    height:100%;
+}
 .axis path,
 .axis line {
     fill: none;
