@@ -144,7 +144,7 @@ d3.csv("NYSummary2.csv", function(error, data) {
             width = $slideContainer.width();
             height = $slideContainer.height();
 
-        var padding = 0.12 * width;
+        var padding = 0.15 * width;
           
         var svg = d3.select(".slideContainer")
             .append("svg")
@@ -160,7 +160,7 @@ d3.csv("NYSummary2.csv", function(error, data) {
         var y1 = d3.scale.linear().domain([0, 750]).range([height - padding, padding]);
 
         // Add the X & Y Axis
-        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(7);
+        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(5);
         var yAxisLeft = d3.svg.axis().scale(y0).orient("left").ticks(5);
         var yAxisRight = d3.svg.axis().scale(y1).orient("right").ticks(5); 
 
@@ -183,14 +183,14 @@ d3.csv("NYSummary2.csv", function(error, data) {
 
         svg.append("text")
             .attr("x", - (height)/ 2 - padding) 
-            .attr("y", padding / 4)
+            .attr("y", padding  - 35)
             .style("fill", "steelblue")
             .attr("transform", "rotate(-90)")
             .text("Housing Rent (1,000 USD)");
 
         svg.append("text")
             .attr("x", - (height)/ 2 - padding)
-            .attr("y", (width - padding / 4))
+            .attr("y", (width - padding) + 45)
             .attr("transform", "rotate(-90)")
             .style("fill", "red") 
             .text("Felony (1,000 Cases)");
@@ -240,7 +240,6 @@ d3.csv("NYSummary2.csv", function(error, data) {
             .y(function(d) { return y1(d.Staten_felony); });
 
         // add path for housing
-
         var lineOpacity = 0.2;
         var lineColorHousing = "#ff0000";
         var lineColorFelony = "#0040ff";
