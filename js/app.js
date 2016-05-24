@@ -160,6 +160,7 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
             height = $slideContainer.height();
             console.log('height is: '+height)
         var padding = 0.20 * width;
+
           
         svg = d3.select(".slideContainer")
             .append("svg")
@@ -176,6 +177,7 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
 
         // Add the X & Y Axis
         var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(7).tickValues(x.domain()).tickFormat(d3.format('.0f'));
+
         var yAxisLeft = d3.svg.axis().scale(y0).orient("left").ticks(5);
         var yAxisRight = d3.svg.axis().scale(y1).orient("right").ticks(5); 
 
@@ -198,14 +200,14 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
 
         svg.append("text")
             .attr("x", - (height)/ 2 - padding) 
-            .attr("y", padding / 4)
+            .attr("y", padding  - 35)
             .style("fill", "steelblue")
             .attr("transform", "rotate(-90)")
             .text("Housing Rent (1,000 USD)");
 
         svg.append("text")
             .attr("x", - (height)/ 2 - padding)
-            .attr("y", (width+0.5*0.75*width - padding / 4))
+            .attr("y", (width - padding) + 45)
             .attr("transform", "rotate(-90)")
             .style("fill", "red") 
             .text("Felony (1,000 Cases)");
@@ -253,7 +255,6 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
         var valueline_felony_Staten = d3.svg.line()
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y1(d.Staten_felony); });
-
         var colorCodes = {
             'Bronx' : "#006884",
             'Brooklyn' : "#B00051",
@@ -269,6 +270,7 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
         //     .attr("class","housing")
         //     .attr("id","housing-NYC")
         //     .attr("d", valueline_housing_NYC(data));
+
 
         svg.append("path")        // Add the valueline2 path.
             .style("stroke", colorCodes['Bronx'])
