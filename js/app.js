@@ -234,14 +234,14 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
 
         svg.append("text")
             .attr("x", - (height)/ 2 - padding) 
-            .attr("y", padding  - 35)
+            .attr("y", padding  - 45)
             .style("fill", "steelblue")
             .attr("transform", "rotate(-90)")
             .text("Housing Rent (1,000 USD)");
 
         svg.append("text")
             .attr("x", - (height)/ 2 - padding)
-            .attr("y", (width - padding) + 45)
+            .attr("y", (width + 45 + 55))
             .attr("transform", "rotate(-90)")
             .style("fill", "red") 
             .text("Felony (1,000 Cases)");
@@ -295,87 +295,69 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
             'Manhattan' : "#91278F",
             'Queens' : "#000000",
             'Staten' : "#FA9D00"
-
         }
 
-        // add path for housing
-        // svg.append("path")        // Add the valueline path.
-        //     .style("stroke", "#ff0000")
-        //     .attr("class","housing")
-        //     .attr("id","housing-NYC")
-        //     .attr("d", valueline_housing_NYC(data));
-
-
-        svg.append("path")        // Add the valueline2 path.
+        //add path for housing rate
+        svg.append("path")       
             .style("stroke", colorCodes['Bronx'])
             .attr("class","housing")
             .attr("id","housing-Bronx")
             .attr("d", valueline_housing_Bronx(data));
 
-        svg.append("path")        // Add the valueline path.
+        svg.append("path")      
             .style("stroke", colorCodes['Brooklyn'])
             .attr("class","housing")
             .attr("id","housing-Brooklyn")
             .attr("d", valueline_housing_Brooklyn(data));
 
-        svg.append("path")        // Add the valueline2 path.
+        svg.append("path")       
             .style("stroke", colorCodes['Manhattan'])
             .attr("class","housing")
             .attr("id","housing-Manhattan")
             .attr("d", valueline_housing_Manhattan(data));
 
-        svg.append("path")        // Add the valueline path.
+        svg.append("path")        
             .style("stroke", colorCodes['Queens'])
             .attr("class","housing")
             .attr("id","housing-Queens")
             .attr("d", valueline_housing_Queens(data));
 
-        svg.append("path")        // Add the valueline2 path.
+        svg.append("path")       
             .style("stroke", colorCodes['Staten'])
             .attr("class","housing")
             .attr("id","housing-Staten-Island")
             .attr("d", valueline_housing_Staten(data));
-
-
         
         // add path for felony
-        // svg.append("path")        // Add the valueline path.
-        //     .style("stroke", "#ffc2b3")
-        //     .attr("class","felony")
-        //     .attr("id","felony-NYC")
-        //     .style("stroke-dasharray", ("6, 6"))
-        //     .attr("d", valueline_felony_NYC(data));
-
-        svg.append("path")        // Add the valueline2 path.
+        svg.append("path")        
             .style("stroke", colorCodes['Bronx'])
             .attr("class","felony")
             .attr("id","felony-Bronx")
             .style("stroke-dasharray", ("6, 6"))
             .attr("d", valueline_felony_Bronx(data));
 
-        svg.append("path")        // Add the valueline path.
+        svg.append("path")        
             .style("stroke", colorCodes['Brooklyn'])
             .attr("class","felony")
             .attr("id","felony-Brooklyn")
             .style("stroke-dasharray", ("6, 6"))
             .attr("d", valueline_felony_Brooklyn(data));
 
-        svg.append("path")        // Add the valueline2 path.
+        svg.append("path")        
             .style("stroke", colorCodes['Manhattan'])
             .attr("class","felony")
             .attr("id","felony-Manhattan")
             .style("stroke-dasharray", ("6, 6"))
-            
             .attr("d", valueline_felony_Manhattan(data));
 
-        svg.append("path")        // Add the valueline path.
+        svg.append("path")        
             .style("stroke", colorCodes['Queens'])
             .attr("class","felony")
             .attr("id","felony-Queens")
             .style("stroke-dasharray", ("6, 6"))
             .attr("d", valueline_felony_Queens(data));
 
-        svg.append("path")        // Add the valueline2 path.
+        svg.append("path")        
             .style("stroke", colorCodes['Staten'])
             .attr("class","felony")
             .attr("id","felony-Staten-Island")
