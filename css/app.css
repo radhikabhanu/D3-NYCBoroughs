@@ -1,8 +1,11 @@
+.navbar {
+    height: 10vh;
+}
 #slide-panel {
 	position: absolute;
 	top: 0%;
     width:90vw;
-    height:100vh;
+    height:90vh;
     padding:10px;
     background:#eee;
     margin-left:-90vw;
@@ -15,8 +18,10 @@
 }
 
 svg {
-/*  border:1px solid black;*/
-    font-size: 0.8em ;
+    position: absolute;
+    left: 50%;
+    top: 28%;
+    -webkit-transform: translateX(-50%);
 }
 
 path { 

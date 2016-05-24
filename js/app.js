@@ -16,7 +16,11 @@ var boroughs = {
 var currentBorough = 0;
 var svg;
 var text;
-
+var plotTextElement;
+var plotText = {
+    'Bronx' : 'Over the years, the crime rate in Bronx has decreased, and housing rates have increased significantly.',
+    'Manhattan' : 'Manhattan has had a fluctuating housing rate until 2000, after which there has been a steady increase. It is easily the most expensive borough in terms of housing. Crime rate has seen a decrease.'
+}
 jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
     ready = true;
     NYCgeojson = response;
@@ -42,6 +46,7 @@ $(document).ready(
         function() {
             getApiKey();
             text = document.getElementById("text");
+            plotTextElement = document.getElementById('plottext');
             map = L.map('map', { zoomControl:false }).setView([40.7127, -74.0059], 10);
 
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -76,7 +81,7 @@ $(document).ready(
                 }
 
                 });
-            $('#opener').on('click', function() {       
+            $('#opener').on('click', function() {     
                 var panel = $('#slide-panel');
                 if (panel.hasClass("visible")) {
                     panel.removeClass('visible').animate({'margin-left':'-'+0.9*w+'px'});
@@ -135,6 +140,7 @@ function plotBorough(x) {
 function highlightBoroughLine(x) {
     console.log(x);
     x = x.replace(" ","-");
+    plotTextElement.innerHTML = plotText[x];
     svg.selectAll(".housing").style('opacity', 0.15);
     svg.selectAll(".felony").style('opacity', 0.15);
     svg.select(".housing#housing-"+x).style('opacity', 1);
@@ -152,41 +158,41 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
         var $slideContainer = $(".slideContainer"),
             width = $slideContainer.width();
             height = $slideContainer.height();
-
-        var padding = 0.12 * width;
+            console.log('height is: '+height)
+        var padding = 0.20 * width;
           
         svg = d3.select(".slideContainer")
             .append("svg")
+            .attr('class','svg')
             .attr("width", width)
-            .attr("height", height)
+            .attr("height", 0.75*height)
             .attr('viewBox','0 0 '+ (width)+' '+ (height))
             .attr('preserveAspectRatio','xMinYMin meet')
 
         var parseDate = d3.time.format("%d-%b-%y").parse;
-
-        var x = d3.scale.linear().domain([1990, 2007]).range([padding, width - padding]);
-        var y0 = d3.scale.linear().domain([0, 650]).range([height - padding, padding]);
-        var y1 = d3.scale.linear().domain([0, 750]).range([height - padding, padding]);
+        var x = d3.time.scale().domain([1990, 2007]).range([padding, width +47]);
+        var y0 = d3.scale.linear().domain([0, 650]).range([0.85*height, 0.15*height]);
+        var y1 = d3.scale.linear().domain([0, 750]).range([0.85*height, 0.15*height]);
 
         // Add the X & Y Axis
-        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(7);
+        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(7).tickValues(x.domain()).tickFormat(d3.format('.0f'));
         var yAxisLeft = d3.svg.axis().scale(y0).orient("left").ticks(5);
         var yAxisRight = d3.svg.axis().scale(y1).orient("right").ticks(5); 
 
         svg.append("g")            
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + (height - padding) + ")")
+            .attr("transform", "translate(0," + (0.85*height) + ")")
             .call(xAxis);
 
         svg.append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate(" + (padding) + " ,0)")   
+            .attr("transform", "translate(" + (padding) + " ,"+0+")")   
             .style("fill", "steelblue")
             .call(yAxisLeft);   
 
         svg.append("g")             
             .attr("class", "y axis")    
-            .attr("transform", "translate(" + (width - padding) + " ,0)")   
+            .attr("transform", "translate(" + (width+45)  + " ,"+0+")") 
             .style("fill", "red")       
             .call(yAxisRight);
 
@@ -199,16 +205,12 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
 
         svg.append("text")
             .attr("x", - (height)/ 2 - padding)
-            .attr("y", (width - padding / 4))
+            .attr("y", (width+0.5*0.75*width - padding / 4))
             .attr("transform", "rotate(-90)")
             .style("fill", "red") 
             .text("Felony (1,000 Cases)");
 
         // draw line of housing rate
-        // NYC
-        var valueline_housing_NYC = d3.svg.line()
-            .x(function(d) { return x(d.date); })
-            .y(function(d) { return y0(d.NYC_housing); });
         // Bronx
         var valueline_housing_Bronx = d3.svg.line()
             .x(function(d) { return x(d.date); })
@@ -231,10 +233,6 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
             .y(function(d) { return y0(d.Staten_housing); });
 
         // draw line of felony rate
-        // NYC
-        var valueline_felony_NYC = d3.svg.line()
-            .x(function(d) { return x(d.date); })
-            .y(function(d) { return y1(d.NYC_felony); });
         // Bronx
         var valueline_felony_Bronx = d3.svg.line()
             .x(function(d) { return x(d.date); })
@@ -266,11 +264,11 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
         }
 
         // add path for housing
-        svg.append("path")        // Add the valueline path.
-            .style("stroke", "#ff0000")
-            .attr("class","housing")
-            .attr("id","housing-NYC")
-            .attr("d", valueline_housing_NYC(data));
+        // svg.append("path")        // Add the valueline path.
+        //     .style("stroke", "#ff0000")
+        //     .attr("class","housing")
+        //     .attr("id","housing-NYC")
+        //     .attr("d", valueline_housing_NYC(data));
 
         svg.append("path")        // Add the valueline2 path.
             .style("stroke", colorCodes['Bronx'])
@@ -305,12 +303,12 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
 
         
         // add path for felony
-        svg.append("path")        // Add the valueline path.
-            .style("stroke", "#ffc2b3")
-            .attr("class","felony")
-            .attr("id","felony-NYC")
-            .style("stroke-dasharray", ("6, 6"))
-            .attr("d", valueline_felony_NYC(data));
+        // svg.append("path")        // Add the valueline path.
+        //     .style("stroke", "#ffc2b3")
+        //     .attr("class","felony")
+        //     .attr("id","felony-NYC")
+        //     .style("stroke-dasharray", ("6, 6"))
+        //     .attr("d", valueline_felony_NYC(data));
 
         svg.append("path")        // Add the valueline2 path.
             .style("stroke", colorCodes['Bronx'])
@@ -339,7 +337,6 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
             .attr("class","felony")
             .attr("id","felony-Queens")
             .style("stroke-dasharray", ("6, 6"))
-            
             .attr("d", valueline_felony_Queens(data));
 
         svg.append("path")        // Add the valueline2 path.
@@ -347,8 +344,6 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
             .attr("class","felony")
             .attr("id","felony-Staten-Island")
             .style("stroke-dasharray", ("6, 6"))
-            
             .attr("d", valueline_felony_Staten(data));
 
-    
 });
