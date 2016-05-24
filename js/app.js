@@ -18,8 +18,11 @@ var svg;
 var text;
 var plotTextElement;
 var plotText = {
-    'Bronx' : 'Over the years, the crime rate in Bronx has decreased, and housing rates have increased significantly.',
-    'Manhattan' : 'Manhattan has had a fluctuating housing rate until 2000, after which there has been a steady increase. It is easily the most expensive borough in terms of housing. Crime rate has seen a decrease.'
+    'Bronx' : 'Over the years, the crime rate in Bronx has decreased, and housing rates have increased. Bronx is the least expensive of the boroughs in terms of housing rates.',
+    'Manhattan' : 'Manhattan has had a fluctuating housing rate until 2000, after which there has been a steady increase. It is easily the most expensive borough in terms of housing. Crime rate has seen a decrease.',
+    'Brooklyn' : 'Brooklyn ranks as the third most expensive borough for housing. From 1990, housing rates have increased and crime rates and decresed, however, it is also the highest in crime rate.',
+    'Queens' : 'Queens is the second most expensive place to buy a house. However, it is less than half of the housing rate of Manhattan, which is the most expensive. Crime rate has decreased steadily over the years.',
+    'Staten Island': 'Staten Island is the safest of all the NYC boroughs. It\'s crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.'
 }
 jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
     ready = true;
@@ -47,7 +50,7 @@ $(document).ready(
             getApiKey();
             text = document.getElementById("text");
             plotTextElement = document.getElementById('plottext');
-            map = L.map('map', { zoomControl:false }).setView([40.7127, -74.0059], 10);
+            map = L.map('map', {dragging:true, tap:true, zoomControl:false }).setView([40.7127, -74.0059], 10);
 
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -56,6 +59,14 @@ $(document).ready(
                 id: ['radhikabk.065mp68i'],
                 accessToken: ['pk.eyJ1IjoicmFkaGlrYWJrIiwiYSI6ImNpb2Y0bTdxOTAwdWh5dm0yc250a2s4MG4ifQ.OXohB9JMXN_liaBsgWaZ6Q']
             }).addTo(map);
+
+            $('.leaflet-control-attribution').hide();
+            // map.dragging.enable();
+            // map.touchZoom.enable();
+            // map.doubleClickZoom.enable();
+            // map.scrollWheelZoom.enable();
+            // map.keyboard.enable();
+
 
 
             geojsonLayer = L.geoJson().addTo(map);
@@ -124,23 +135,46 @@ function clearMap() {
 };
 
 function plotBorough(x) {
+    if(x=='All') {
+        var keys = Object.keys(plotText);
+        plotAllBoroughGraph(keys);
+        for(var i=0; i<keys.length; i++) {
+            currentBorough = boroughs[keys[i]];
+            geojsonLayer.addData(NYCgeojson.features[currentBorough]);
+            var bounds = geojsonLayer.getBounds();
+            var center = bounds.getCenter();
+            map.panTo(center)
+        }
+    }
+    else {
+        clearMap();
+        currentBorough = boroughs[x];
+        highlightBoroughLine(x);
+        geojsonLayer.addData(NYCgeojson.features[currentBorough]);
+        var bounds = geojsonLayer.getBounds();
+        var center = bounds.getCenter();
+        map.panTo(center)
+    }
+
     text.innerHTML = x;
     if( $('#navbar-header').hasClass('in') ) {
         $('.navbar-toggler').click();
     }
-    clearMap();
-    currentBorough = boroughs[x];
-    highlightBoroughLine(x);
-    geojsonLayer.addData(NYCgeojson.features[currentBorough]);
-    var bounds = geojsonLayer.getBounds();
-    var center = bounds.getCenter();
-    map.panTo(center)
 };
+
+function plotAllBoroughGraph(boroughs) {
+    for(var i =0; i< boroughs.length; i++) {
+        var x = boroughs[i];
+        x = x.replace(" ","-");
+        svg.selectAll(".housing").style('opacity', 1);
+        svg.selectAll(".felony").style('opacity', 1);
+    }
+}
 
 function highlightBoroughLine(x) {
     console.log(x);
-    x = x.replace(" ","-");
     plotTextElement.innerHTML = plotText[x];
+    x = x.replace(" ","-");
     svg.selectAll(".housing").style('opacity', 0.15);
     svg.selectAll(".felony").style('opacity', 0.15);
     svg.select(".housing#housing-"+x).style('opacity', 1);

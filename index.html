@@ -34,10 +34,10 @@
 <body>
     <div class="container-full">
       <nav class="navbar navbar-light bg-faded">
-        <span class="hidden-md-up" id="text" style="margin-left: 3%;">Select A Borough</span>
-        <button style="margin-left:40%;" id="nav-hamburger" class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header">
+        <button id="nav-hamburger" class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header">
           &#9776;
         </button>
+        <span class="hidden-md-up" id="text" >Select A Borough</span>
         <div class="collapse navbar-toggleable-xs" id="navbar-header">
             <div class="col-md-2 nav-item">
                 <p><a class="btn btn-primary" style="width: 100%;" href="javascript:void(0)" onclick="plotBorough('Staten Island')" role="button"><small>Staten Island</small></a></p>
@@ -58,7 +58,7 @@
                 <p><a class="btn btn-primary nav-item" style="width: 100%;" href="javascript:void(0)" onclick="plotBorough('Bronx')" role="button"><small>Bronx</small></a></p>
             </div>
             <div class="col-md-2">
-                <p><a class="btn btn-danger nav-item" style="width: 100%;" href="javascript:void(0)" onclick="clearMap()" role="button"><small>Clear Map</small></a></p>
+                <p><a class="btn btn-danger nav-item" style="width: 100%;" href="javascript:void(0)" onclick="plotBorough('All')" role="button"><small>All</small></a></p>
             </div>
 
 

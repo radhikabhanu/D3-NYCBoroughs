@@ -1,6 +1,6 @@
-.navbar {
+/*.navbar {
     height: 10vh;
-}
+}*/
 #slide-panel {
 	position: absolute;
 	top: 0%;
@@ -17,10 +17,19 @@
     border-radius:0;
 }
 
+#plottext {
+    padding: 2%;
+}
+#text {
+    margin-left: 3vw;
+    top: 0.5vh;
+    position: relative;
+}
+
 svg {
     position: absolute;
     left: 50%;
-    top: 28%;
+    top: 24%;
     -webkit-transform: translateX(-50%);
 }
 
