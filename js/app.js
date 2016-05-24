@@ -14,7 +14,7 @@ var boroughs = {
 };
 
 var currentBorough = 0;
-
+var svg;
 var text;
 
 jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
@@ -125,13 +125,230 @@ function plotBorough(x) {
     }
     clearMap();
     currentBorough = boroughs[x];
-
+    highlightBoroughLine(x);
     geojsonLayer.addData(NYCgeojson.features[currentBorough]);
     var bounds = geojsonLayer.getBounds();
     var center = bounds.getCenter();
     map.panTo(center)
 };
 
+function highlightBoroughLine(x) {
+    console.log(x);
+    x = x.replace(" ","-");
+    svg.selectAll(".housing").style('opacity', 0.15);
+    svg.selectAll(".felony").style('opacity', 0.15);
+    svg.select(".housing#housing-"+x).style('opacity', 1);
+    svg.select(".felony#felony-"+x).style('opacity', 1);
+}
+
 function setMode(x) {
     mode = x;
 };
+
+// Draw the line graph in slide panel
+d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
+
+
+        var $slideContainer = $(".slideContainer"),
+            width = $slideContainer.width();
+            height = $slideContainer.height();
+
+        var padding = 0.12 * width;
+          
+        svg = d3.select(".slideContainer")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr('viewBox','0 0 '+ (width)+' '+ (height))
+            .attr('preserveAspectRatio','xMinYMin meet')
+
+        var parseDate = d3.time.format("%d-%b-%y").parse;
+
+        var x = d3.scale.linear().domain([1990, 2007]).range([padding, width - padding]);
+        var y0 = d3.scale.linear().domain([0, 650]).range([height - padding, padding]);
+        var y1 = d3.scale.linear().domain([0, 750]).range([height - padding, padding]);
+
+        // Add the X & Y Axis
+        var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(7);
+        var yAxisLeft = d3.svg.axis().scale(y0).orient("left").ticks(5);
+        var yAxisRight = d3.svg.axis().scale(y1).orient("right").ticks(5); 
+
+        svg.append("g")            
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (height - padding) + ")")
+            .call(xAxis);
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + (padding) + " ,0)")   
+            .style("fill", "steelblue")
+            .call(yAxisLeft);   
+
+        svg.append("g")             
+            .attr("class", "y axis")    
+            .attr("transform", "translate(" + (width - padding) + " ,0)")   
+            .style("fill", "red")       
+            .call(yAxisRight);
+
+        svg.append("text")
+            .attr("x", - (height)/ 2 - padding) 
+            .attr("y", padding / 4)
+            .style("fill", "steelblue")
+            .attr("transform", "rotate(-90)")
+            .text("Housing Rent (1,000 USD)");
+
+        svg.append("text")
+            .attr("x", - (height)/ 2 - padding)
+            .attr("y", (width - padding / 4))
+            .attr("transform", "rotate(-90)")
+            .style("fill", "red") 
+            .text("Felony (1,000 Cases)");
+
+        // draw line of housing rate
+        // NYC
+        var valueline_housing_NYC = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.NYC_housing); });
+        // Bronx
+        var valueline_housing_Bronx = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Bronx_housing); });
+        // Brooklyn
+        var valueline_housing_Brooklyn = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Brooklyn_housing); });
+        // Manhattan
+        var valueline_housing_Manhattan = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Manhattan_housing); });
+        // Queens
+        var valueline_housing_Queens = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Queens_housing); });
+        // Staten
+        var valueline_housing_Staten = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y0(d.Staten_housing); });
+
+        // draw line of felony rate
+        // NYC
+        var valueline_felony_NYC = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.NYC_felony); });
+        // Bronx
+        var valueline_felony_Bronx = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Bronx_felony); });
+        // Brooklyn
+        var valueline_felony_Brooklyn = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Brooklyn_felony); });
+        // Manhattan
+        var valueline_felony_Manhattan = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Manhattan_felony); });
+        // Queens
+        var valueline_felony_Queens = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Queens_felony); });
+        // Staten
+        var valueline_felony_Staten = d3.svg.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y1(d.Staten_felony); });
+
+        var colorCodes = {
+            'Bronx' : "#006884",
+            'Brooklyn' : "#B00051",
+            'Manhattan' : "#91278F",
+            'Queens' : "#000000",
+            'Staten' : "#FA9D00"
+
+        }
+
+        // add path for housing
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#ff0000")
+            .attr("class","housing")
+            .attr("id","housing-NYC")
+            .attr("d", valueline_housing_NYC(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", colorCodes['Bronx'])
+            .attr("class","housing")
+            .attr("id","housing-Bronx")
+            .attr("d", valueline_housing_Bronx(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", colorCodes['Brooklyn'])
+            .attr("class","housing")
+            .attr("id","housing-Brooklyn")
+            .attr("d", valueline_housing_Brooklyn(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", colorCodes['Manhattan'])
+            .attr("class","housing")
+            .attr("id","housing-Manhattan")
+            .attr("d", valueline_housing_Manhattan(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", colorCodes['Queens'])
+            .attr("class","housing")
+            .attr("id","housing-Queens")
+            .attr("d", valueline_housing_Queens(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", colorCodes['Staten'])
+            .attr("class","housing")
+            .attr("id","housing-Staten-Island")
+            .attr("d", valueline_housing_Staten(data));
+
+
+        
+        // add path for felony
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", "#ffc2b3")
+            .attr("class","felony")
+            .attr("id","felony-NYC")
+            .style("stroke-dasharray", ("6, 6"))
+            .attr("d", valueline_felony_NYC(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", colorCodes['Bronx'])
+            .attr("class","felony")
+            .attr("id","felony-Bronx")
+            .style("stroke-dasharray", ("6, 6"))
+            .attr("d", valueline_felony_Bronx(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", colorCodes['Brooklyn'])
+            .attr("class","felony")
+            .attr("id","felony-Brooklyn")
+            .style("stroke-dasharray", ("6, 6"))
+            .attr("d", valueline_felony_Brooklyn(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", colorCodes['Manhattan'])
+            .attr("class","felony")
+            .attr("id","felony-Manhattan")
+            .style("stroke-dasharray", ("6, 6"))
+            
+            .attr("d", valueline_felony_Manhattan(data));
+
+        svg.append("path")        // Add the valueline path.
+            .style("stroke", colorCodes['Queens'])
+            .attr("class","felony")
+            .attr("id","felony-Queens")
+            .style("stroke-dasharray", ("6, 6"))
+            
+            .attr("d", valueline_felony_Queens(data));
+
+        svg.append("path")        // Add the valueline2 path.
+            .style("stroke", colorCodes['Staten'])
+            .attr("class","felony")
+            .attr("id","felony-Staten-Island")
+            .style("stroke-dasharray", ("6, 6"))
+            
+            .attr("d", valueline_felony_Staten(data));
+
+    
+});
