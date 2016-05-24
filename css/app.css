@@ -1,6 +1,13 @@
 /*.navbar {
     height: 10vh;
 }*/
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+.leaflet-label {
+    pointer-events: auto;
+}
+
 #slide-panel {
 	position: absolute;
 	top: 0%;
@@ -49,4 +56,7 @@ path {
     stroke: grey;
     stroke-width: 1;
     shape-rendering: crispEdges;
+}
+.cell path{
+    stroke : #000;
 }

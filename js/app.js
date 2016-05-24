@@ -45,13 +45,14 @@ function getApiKey() {
     census.enable("b9f91488e2b7f8eb36894b3c3ed7382598e487b4");
 };
 
+
 $(document).ready(
         function() {
             getApiKey();
             text = document.getElementById("text");
             plotTextElement = document.getElementById('plottext');
-            map = L.map('map', {dragging:true, tap:true, zoomControl:false }).setView([40.7127, -74.0059], 10);
-
+            map = L.map('map').setView([40.7127, -74.0059], 10);
+            
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 minZoom: 10,
@@ -61,13 +62,8 @@ $(document).ready(
             }).addTo(map);
 
             $('.leaflet-control-attribution').hide();
-            // map.dragging.enable();
-            // map.touchZoom.enable();
-            // map.doubleClickZoom.enable();
-            // map.scrollWheelZoom.enable();
-            // map.keyboard.enable();
-
-
+            
+            $('#myModal').modal('show');
 
             geojsonLayer = L.geoJson().addTo(map);
 
@@ -75,12 +71,15 @@ $(document).ready(
                 {
                 style: {
                     "clickable": true,
-                    "color": "#ff7800",
+                    "color": "#ff0000",
                     "weight": 2,
-                    "opacity": 0.65
+                    "opacity": 0.65,
+                    "fill" : true,
+                    "fillColor": '#ff0000'
                 },
 
                 onEachFeature: function (feature, layer) {
+                    console.log(layer)
                     layer.on('click', function (e) {
                         var popup = "<h4>" + feature.properties.NAME + "</h4>";
                         variables.forEach(function(v) {
@@ -214,6 +213,9 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
 
         var yAxisLeft = d3.svg.axis().scale(y0).orient("left").ticks(5);
         var yAxisRight = d3.svg.axis().scale(y1).orient("right").ticks(5); 
+        var ordinal = d3.scale.ordinal()
+                      .domain(["Staten Island", "Queens", "Brooklyn", "Manhattan", "Bronx"])
+                      .range([ "#FA9D00", "#000000", "#B00051", "#91278F", "#006884"]);
 
         svg.append("g")            
             .attr("class", "x axis")
@@ -232,19 +234,43 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
             .style("fill", "red")       
             .call(yAxisRight);
 
+        // svg.append("text")
+        //     .attr("x", - (height)/ 2 - padding) 
+        //     .attr("y", padding  - 45)
+        //     .style("fill", "steelblue")
+        //     .attr("transform", "rotate(-90)")
+        //     .text("Housing Rent (1,000 USD)");
         svg.append("text")
-            .attr("x", - (height)/ 2 - padding) 
-            .attr("y", padding  - 45)
+            .attr("x", padding*0.15) 
+            .attr("y", (0.92*height))
             .style("fill", "steelblue")
-            .attr("transform", "rotate(-90)")
             .text("Housing Rent (1,000 USD)");
 
         svg.append("text")
-            .attr("x", - (height)/ 2 - padding)
-            .attr("y", (width + 45 + 55))
-            .attr("transform", "rotate(-90)")
-            .style("fill", "red") 
+            .attr("x", 0.9*width)
+            .attr("y", (0.92*height))
+            .style("fill", "red")
+            .attr("font-size", "1em")
+            .attr("fill","black")
             .text("Felony (1,000 Cases)");
+
+        var group = svg.append("g")
+                      .attr("class", "legendOrdinal")
+                      .attr("transform", "translate("+0.3*width+","+0.95*height+")");
+
+                    var legendOrdinal = d3.legend.color()
+                      .shape("path", d3.svg.symbol().type("circle").size(150)())
+                      .shapePadding(0.15*width)
+                      .orient('horizontal')
+                      .scale(ordinal);
+
+                    group.selectAll('path')
+                         .attr('stroke','#000')
+                         .attr('stroke-width',1)
+                    svg.select(".legendOrdinal")
+                      .call(legendOrdinal);
+
+ 
 
         // draw line of housing rate
         // Bronx
@@ -289,6 +315,7 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
         var valueline_felony_Staten = d3.svg.line()
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y1(d.Staten_felony); });
+            //here
         var colorCodes = {
             'Bronx' : "#006884",
             'Brooklyn' : "#B00051",
