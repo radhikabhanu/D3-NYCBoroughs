@@ -23,13 +23,10 @@ var plotText = {
     'Manhattan' : 'Manhattan has had a fluctuating housing rate until 2000, after which there has been a steady increase. It is easily the most expensive borough in terms of housing. Crime rate has seen a decrease.',
     'Brooklyn' : 'Brooklyn ranks as the third most expensive borough for housing. From 1990, housing rates have increased and crime rates and decresed, however, it is also the highest in crime rate.',
     'Queens' : 'Queens is the second most expensive place to buy a house. However, it is less than half of the housing rate of Manhattan, which is the most expensive. Crime rate has decreased steadily over the years.',
-<<<<<<< HEAD
     'Staten Island': 'Staten Island is the safest of all the NYC boroughs. It\'s crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.',
     'All': 'This provide the overview of all boroughs. Average housing cost almost doubles within a decade, while crime rate dropped significantly overtime. (the solid line represent housing cost, while dashed line indicates felony)'
-=======
-    'Staten Island': 'Staten Island is the safest of all the NYC boroughs. Its crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.'
->>>>>>> f75eb3675cbb51919935dfe5f5c2badb6489f848
 }
+
 jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
     ready = true;
     NYCgeojson = response;
@@ -263,23 +260,21 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
                          .attr('stroke','#000')
                          .attr('stroke-width',1)
                     svg.select(".legendOrdinal")
-<<<<<<< HEAD
-                      .call(legendOrdinal)
-=======
                       .call(legendOrdinal);
-         svg.append("text")
-        .attr("transform", "translate(" + (width*0.4) + "," + 0.17*height+ ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "black")
-        .text("Continuous line - Housing");
-        svg.append("text")
-        .attr("transform", "translate(" + (width*0.4) + "," + 0.2*height + ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "black")
-        .text("Dotted line - Crime");
->>>>>>> f75eb3675cbb51919935dfe5f5c2badb6489f848
+                    
+                    svg.append("text")
+                        .attr("transform", "translate(" + (width*0.4) + "," + 0.17*height+ ")")
+                        .attr("dy", ".35em")
+                        .attr("text-anchor", "start")
+                        .style("fill", "black")
+                        .text("Continuous line - Housing");
+                    
+                    svg.append("text")
+                        .attr("transform", "translate(" + (width*0.4) + "," + 0.2*height + ")")
+                        .attr("dy", ".35em")
+                        .attr("text-anchor", "start")
+                        .style("fill", "black")
+                        .text("Dotted line - Crime");
  
 
         // draw line of housing rate
