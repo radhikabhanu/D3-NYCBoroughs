@@ -10,7 +10,8 @@ var boroughs = {
     "Queens": 1,
     "Brooklyn": 2,
     "Manhattan": 3,
-    "Bronx": 4
+    "Bronx": 4,
+    "All": 5
 };
 
 var currentBorough = 0;
@@ -22,7 +23,8 @@ var plotText = {
     'Manhattan' : 'Manhattan has had a fluctuating housing rate until 2000, after which there has been a steady increase. It is easily the most expensive borough in terms of housing. Crime rate has seen a decrease.',
     'Brooklyn' : 'Brooklyn ranks as the third most expensive borough for housing. From 1990, housing rates have increased and crime rates and decresed, however, it is also the highest in crime rate.',
     'Queens' : 'Queens is the second most expensive place to buy a house. However, it is less than half of the housing rate of Manhattan, which is the most expensive. Crime rate has decreased steadily over the years.',
-    'Staten Island': 'Staten Island is the safest of all the NYC boroughs. It\'s crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.'
+    'Staten Island': 'Staten Island is the safest of all the NYC boroughs. It\'s crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.',
+    'All': 'This provide the overview of all boroughs. Average housing cost almost doubles within a decade, while crime rate dropped significantly overtime. (the solid line represent housing cost, while dashed line indicates felony)'
 }
 jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
     ready = true;
@@ -234,12 +236,6 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
             .style("fill", "red")       
             .call(yAxisRight);
 
-        // svg.append("text")
-        //     .attr("x", - (height)/ 2 - padding) 
-        //     .attr("y", padding  - 45)
-        //     .style("fill", "steelblue")
-        //     .attr("transform", "rotate(-90)")
-        //     .text("Housing Rent (1,000 USD)");
         svg.append("text")
             .attr("x", padding*0.15) 
             .attr("y", (0.92*height))
@@ -268,8 +264,7 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
                          .attr('stroke','#000')
                          .attr('stroke-width',1)
                     svg.select(".legendOrdinal")
-                      .call(legendOrdinal);
-
+                      .call(legendOrdinal)
  
 
         // draw line of housing rate
