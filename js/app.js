@@ -22,7 +22,8 @@ var plotText = {
     'Manhattan' : 'Manhattan has had a fluctuating housing rate until 2000, after which there has been a steady increase. It is easily the most expensive borough in terms of housing. Crime rate has seen a decrease.',
     'Brooklyn' : 'Brooklyn ranks as the third most expensive borough for housing. From 1990, housing rates have increased and crime rates and decresed, however, it is also the highest in crime rate.',
     'Queens' : 'Queens is the second most expensive place to buy a house. However, it is less than half of the housing rate of Manhattan, which is the most expensive. Crime rate has decreased steadily over the years.',
-    'Staten Island': 'Staten Island is the safest of all the NYC boroughs. Its crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.'
+    'Staten Island': 'Staten Island is the safest of all the NYC boroughs. Its crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.',
+    'All' : 'Over the years, the boroughs have shown different trends for housing and crime rates, with Manhattan showing maximum irregularity for housing rates. Staten Island has the least crime rate and is the safest of all the boroughs. Manhattan is the most expensive in terms of house rent, more than double of the next in line - Queens. Brooklyn is the highest in terms of crime rate, while Bronx is the least expensive borough to stay.'
 }
 jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
     ready = true;
@@ -131,7 +132,8 @@ function plotBorough(x) {
     if(x=='All') {
         var keys = Object.keys(plotText);
         plotAllBoroughGraph(keys);
-        for(var i=0; i<keys.length; i++) {
+        plotTextElement.innerHTML = plotText[x];
+        for(var i=0; i<keys.length-1; i++) {
             currentBorough = boroughs[keys[i]];
             geojsonLayer.addData(NYCgeojson.features[currentBorough]);
             var bounds = geojsonLayer.getBounds();
@@ -165,7 +167,6 @@ function plotAllBoroughGraph(boroughs) {
 }
 
 function highlightBoroughLine(x) {
-    console.log(x);
     plotTextElement.innerHTML = plotText[x];
     x = x.replace(" ","-");
     svg.selectAll(".housing").style('opacity', 0.15);
@@ -185,7 +186,6 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
         var $slideContainer = $(".slideContainer"),
             width = $slideContainer.width();
             height = $slideContainer.height();
-            console.log('height is: '+height)
         var padding = 0.20 * width;
 
           
