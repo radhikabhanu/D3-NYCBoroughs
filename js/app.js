@@ -10,7 +10,8 @@ var boroughs = {
     "Queens": 1,
     "Brooklyn": 2,
     "Manhattan": 3,
-    "Bronx": 4
+    "Bronx": 4,
+    "All": 5
 };
 
 var currentBorough = 0;
@@ -25,6 +26,7 @@ var plotText = {
     'Staten Island': 'Staten Island is the safest of all the NYC boroughs. Its crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.',
     'All' : 'Over the years, the boroughs have shown different trends for housing and crime rates, with Manhattan showing maximum irregularity for housing rates. Staten Island has the least crime rate and is the safest of all the boroughs. Manhattan is the most expensive in terms of house rent, more than double of the next in line - Queens. Brooklyn is the highest in terms of crime rate, while Bronx is the least expensive borough to stay.'
 }
+
 jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
     ready = true;
     NYCgeojson = response;
@@ -42,7 +44,7 @@ var census = sdk.modules.census;
 var mode = "geometry";
 
 function getApiKey() {
-    apiKey = "b9f91488e2b7f8eb36894b3c3ed7382598e487b4";//prompt("Enter your Census API Key","API Key");
+    apiKey = "b9f91488e2b7f8eb36894b3c3ed7382598e487b4";
     census.enable("b9f91488e2b7f8eb36894b3c3ed7382598e487b4");
 };
 
@@ -85,7 +87,7 @@ $(document).ready(
                         weight: 0.5
                     });
                 });
-         
+
             $('#opener').on('click', function() {     
                 var panel = $('#slide-panel');
                 if (panel.hasClass("visible")) {
@@ -100,6 +102,7 @@ $(document).ready(
                 }   
                 return false;   
             });
+
         }
 );
 var q;
@@ -218,7 +221,7 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
 
         svg.append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate(" + (padding) + " ,"+0+")")   
+            .attr("transform", "translate(" + (width*0.194) + " ,"+0+")")   
             .style("fill", "steelblue")
             .call(yAxisLeft);   
 
@@ -258,18 +261,20 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
                          .attr('stroke-width',1)
                     svg.select(".legendOrdinal")
                       .call(legendOrdinal);
-         svg.append("text")
-        .attr("transform", "translate(" + (width*0.4) + "," + 0.17*height+ ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "black")
-        .text("Continuous line - Housing");
-        svg.append("text")
-        .attr("transform", "translate(" + (width*0.4) + "," + 0.2*height + ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "black")
-        .text("Dotted line - Crime");
+                    
+                    svg.append("text")
+                        .attr("transform", "translate(" + (width*0.4) + "," + 0.17*height+ ")")
+                        .attr("dy", ".35em")
+                        .attr("text-anchor", "start")
+                        .style("fill", "black")
+                        .text("Continuous line - Housing");
+                    
+                    svg.append("text")
+                        .attr("transform", "translate(" + (width*0.4) + "," + 0.2*height + ")")
+                        .attr("dy", ".35em")
+                        .attr("text-anchor", "start")
+                        .style("fill", "black")
+                        .text("Dotted line - Crime");
  
 
         // draw line of housing rate
@@ -317,7 +322,6 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
         var valueline_felony_Staten = d3.svg.line()
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y1(d.Staten_felony); });
-            //here
         var colorCodes = {
             'Bronx' : "#006884",
             'Brooklyn' : "#B00051",
