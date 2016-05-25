@@ -23,8 +23,12 @@ var plotText = {
     'Manhattan' : 'Manhattan has had a fluctuating housing rate until 2000, after which there has been a steady increase. It is easily the most expensive borough in terms of housing. Crime rate has seen a decrease.',
     'Brooklyn' : 'Brooklyn ranks as the third most expensive borough for housing. From 1990, housing rates have increased and crime rates and decresed, however, it is also the highest in crime rate.',
     'Queens' : 'Queens is the second most expensive place to buy a house. However, it is less than half of the housing rate of Manhattan, which is the most expensive. Crime rate has decreased steadily over the years.',
+<<<<<<< HEAD
     'Staten Island': 'Staten Island is the safest of all the NYC boroughs. It\'s crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.',
     'All': 'This provide the overview of all boroughs. Average housing cost almost doubles within a decade, while crime rate dropped significantly overtime. (the solid line represent housing cost, while dashed line indicates felony)'
+=======
+    'Staten Island': 'Staten Island is the safest of all the NYC boroughs. Its crime rate is surprisingly much lower than the other boroughs, and has been on the decline over the years. Housing rates were on the rise, but seems to be stabilized over the late 2000s.'
+>>>>>>> f75eb3675cbb51919935dfe5f5c2badb6489f848
 }
 jQuery.getJSON("https://cdn.rawgit.com/dwillis/nyc-maps/master/boroughs.geojson", function(response) {
     ready = true;
@@ -47,13 +51,24 @@ function getApiKey() {
     census.enable("b9f91488e2b7f8eb36894b3c3ed7382598e487b4");
 };
 
-
+function style() {
+        
+            return {
+                weight: 10,
+                opacity: 1,
+                color: '#FF0000',
+                dashArray: '3',
+                fillOpacity: 1,
+                fill: true,
+                fillColor: '#ff0000'
+            }
+    }
 $(document).ready(
         function() {
             getApiKey();
             text = document.getElementById("text");
             plotTextElement = document.getElementById('plottext');
-            map = L.map('map').setView([40.7127, -74.0059], 10);
+            map = L.map('map', {zoomControl : false}).setView([40.7127, -74.0059], 10);
             
             L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -68,31 +83,14 @@ $(document).ready(
             $('#myModal').modal('show');
 
             geojsonLayer = L.geoJson().addTo(map);
-
-            L.Util.setOptions(geojsonLayer,
-                {
-                style: {
-                    "clickable": true,
-                    "color": "#ff0000",
-                    "weight": 2,
-                    "opacity": 0.65,
-                    "fill" : true,
-                    "fillColor": '#ff0000'
-                },
-
-                onEachFeature: function (feature, layer) {
-                    console.log(layer)
-                    layer.on('click', function (e) {
-                        var popup = "<h4>" + feature.properties.NAME + "</h4>";
-                        variables.forEach(function(v) {
-                            popup += "<br/><strong>" + v + "</strong>: " + feature.properties[v];
-                        });
-
-                        layer.bindPopup(popup);
+            geojsonLayer.eachLayer(function(layer) {
+                    layer.setStyle({
+                        fillColor: "#ff0000",
+                        fillOpacity: 0.8,
+                        weight: 0.5
                     });
-                }
-
                 });
+         
             $('#opener').on('click', function() {     
                 var panel = $('#slide-panel');
                 if (panel.hasClass("visible")) {
@@ -237,16 +235,17 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
             .call(yAxisRight);
 
         svg.append("text")
-            .attr("x", padding*0.15) 
+            .attr("x", width*0.1) 
             .attr("y", (0.92*height))
             .style("fill", "steelblue")
+            .attr("font-size", "0.75em")
             .text("Housing Rent (1,000 USD)");
 
         svg.append("text")
-            .attr("x", 0.9*width)
+            .attr("x", 0.94*width)
             .attr("y", (0.92*height))
             .style("fill", "red")
-            .attr("font-size", "1em")
+            .attr("font-size", "0.75em")
             .attr("fill","black")
             .text("Felony (1,000 Cases)");
 
@@ -256,7 +255,7 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
 
                     var legendOrdinal = d3.legend.color()
                       .shape("path", d3.svg.symbol().type("circle").size(150)())
-                      .shapePadding(0.15*width)
+                      .shapePadding(0.17*width)
                       .orient('horizontal')
                       .scale(ordinal);
 
@@ -264,7 +263,23 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
                          .attr('stroke','#000')
                          .attr('stroke-width',1)
                     svg.select(".legendOrdinal")
+<<<<<<< HEAD
                       .call(legendOrdinal)
+=======
+                      .call(legendOrdinal);
+         svg.append("text")
+        .attr("transform", "translate(" + (width*0.4) + "," + 0.17*height+ ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "black")
+        .text("Continuous line - Housing");
+        svg.append("text")
+        .attr("transform", "translate(" + (width*0.4) + "," + 0.2*height + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "black")
+        .text("Dotted line - Crime");
+>>>>>>> f75eb3675cbb51919935dfe5f5c2badb6489f848
  
 
         // draw line of housing rate
@@ -288,6 +303,8 @@ d3.csv("data/NYCHousing&Felony.csv", function(error, data) {
         var valueline_housing_Staten = d3.svg.line()
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y0(d.Staten_housing); });
+
+       
 
         // draw line of felony rate
         // Bronx
