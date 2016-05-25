@@ -1,6 +1,4 @@
-/*.navbar {
-    height: 10vh;
-}*/
+
 * {
     font-family: 'Montserrat', sans-serif;
 }
@@ -12,7 +10,7 @@
 	position: absolute;
 	top: 0%;
     width:90vw;
-    height:90vh;
+    height:93vh;
     padding:10px;
     background:#eee;
     margin-left:-90vw;
@@ -59,4 +57,10 @@ path {
 }
 .cell path{
     stroke : #000;
+}
+#info {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 1em;
 }
