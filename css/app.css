@@ -37,6 +37,7 @@ svg {
     left: 50%;
     top: 24%;
     -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
 }
 
 path { 
